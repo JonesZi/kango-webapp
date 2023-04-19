@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 7000;
 const hostname = "localhost";
 
 //Multer
+// TODO: Configure Filename to save mutliple files (and create a named folder by doing it?)
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname)
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname,"public")));
 app.listen(PORT, () => console.log(`Server has started on ${hostname}:${PORT}.`));
 
 //Handle Post Request
+// TODO: convert blob into readable format (mp3?)
 app.post("/upload", upload.any("file"), (req,res) => {
   console.log("uploaded file")
 });
