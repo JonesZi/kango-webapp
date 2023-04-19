@@ -1,14 +1,12 @@
 const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 3000;
-// const hostname = "192.168.56.1"
 const path = require("path");
-const cors = require("cors");
-app.use(cors());
+const app = express();
+
+const PORT = process.env.PORT || 7000;
+const hostname = "localhost";
 
 // Set static folder
+app.use(express.static(path.join(__dirname,"public")));
 
-app.use(express.static((path.join(__dirname,"public"))));
-
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+//Init server on PORT
+app.listen(PORT, () => console.log(`Server has started on ${hostname}:${PORT}.`));
