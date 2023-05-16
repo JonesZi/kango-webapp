@@ -7,6 +7,8 @@ if (navigator.mediaDevices.getUserMedia) {
 
   const constraints = { audio: true };
   let chunks = [];
+  let name = 'Gustav'
+  let counter = 1;
 
   let onSuccess = function(stream) {
     const mediaRecorder = new MediaRecorder(stream);
@@ -62,10 +64,12 @@ if (navigator.mediaDevices.getUserMedia) {
 
       // audio.controls = true;
       const blob = new Blob(chunks, { 'type' : 'audio/mp3' });
+      const file = new File([blob],`${name}${counter}.mp3`, { 'type' : 'audio/mp3' });
+      counter++;
       chunks = [];
       // const audioURL = window.URL.createObjectURL(blob);
       // audio.src = audioURL;
-      sendAudioFile(blob);
+      sendAudioFile(file);
       console.log("recorder stopped");
 
       // deleteButton.onclick = function(e) {
