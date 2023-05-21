@@ -1,12 +1,21 @@
 //Load modules
 const express = require("express");
 const path = require("path");
-const app = express();
 const multer = require("multer");
+const exphbs = require("express-handlebars");
 
-//Host
-const PORT = process.env.PORT || 7000;
+//Initialize app
+const app = express();
+
+//Setup Handlebars view engine
+app.set("views", path.join(__dirname,"views"));
+app.engine("handlebars", exphbs.engine({defaultLayout: "main"}));
+app.set("view engine", "handlebars");
+
+//Define Host
+const PORT = process.env.PORT || 8000;
 const hostname = "localhost";
+
 
 //Multer
 // TODO: Configure Filename to save mutliple files (and create a named folder by doing it?)
@@ -22,16 +31,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 // Set static folder
-app.use(express.static(path.join(__dirname,"public")));
+// app.use(express.static(path.join(__dirname,"public")));
 
-//Init server on PORT
-app.listen(PORT, () => console.log(`Server has started on ${hostname}:${PORT}.`));
+//Set routes for handlebars views
+app.get("/", (req,res) => {
+  res.render("home");
+})
 
 //Handle Post Request
-// TODO: convert blob into readable format (mp3?)
 app.post("/upload", upload.any("file"), (req,res) => {
   console.log("uploaded file")
 });
 // app.get("/upload", (req,res) => {
 //   res.send("Hello")
 // });
+
+
+//Init server on PORT
+app.listen(PORT, () => console.log(`Server has started on ${hostname}:${PORT}.`));
