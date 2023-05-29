@@ -54,6 +54,7 @@ app.post('/update-status', (req, res) => {
   } else {
     update = false;
   };
+  console.log(update);
 
   // Respond with a JSON indicating the status update was successful
   res.json({ message: `Status updated successfully to ${update}`});
