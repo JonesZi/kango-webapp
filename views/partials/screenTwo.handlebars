@@ -1,0 +1,24 @@
+<h1>This is screen two</h1>
+<p>I am being loaded after being called aka update:true</p>
+<button id="goScreenOne">Go back to screen one</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('goScreenOne');
+
+        btn.addEventListener('click', () => {
+            // Make an AJAX request to update the status on the server
+            fetch('/update-status', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server, if needed
+                console.log("bam");
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the request
+                console.error('An error occurred:', error);
+            });
+        });
+    });
+
+</script>

@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8000;
 const hostname = "localhost";
 
 
-//Multer
+//Multer for saving Blob files on the server
 // TODO: Configure Filename to save mutliple files (and create a named folder by doing it?)
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
@@ -33,18 +33,32 @@ const upload = multer({ storage })
 // Set static folder
 // app.use(express.static(path.join(__dirname,"public")));
 
+//Set variables
+let update = false;
+
 //Set routes for handlebars views
 app.get("/", (req,res) => {
-  res.render("home");
+  res.render("home", { update });
 })
 
 //Handle Post Request
 app.post("/upload", upload.any("file"), (req,res) => {
   console.log("uploaded file")
 });
-// app.get("/upload", (req,res) => {
-//   res.send("Hello")
-// });
+
+app.post('/update-status', (req, res) => {
+  // Perform the logic to update the status variable on the server
+  // For example, you can toggle its value between true and false
+  if (update === false) {
+    update = true;
+  } else {
+    update = false;
+  };
+
+  // Respond with a JSON indicating the status update was successful
+  res.json({ message: `Status updated successfully to ${update}`});
+});
+
 
 
 //Init server on PORT
