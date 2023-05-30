@@ -1,0 +1,21 @@
+<button id="reset">Reset Names</button>
+<button id="toStart"><a href="/">Home</a></button>
+
+<script>
+    btn = document.getElementById("reset");
+
+    btn.addEventListener("click", async () => {
+        try {
+            const response = await fetch("/deleteUsers", { method: "POST" });
+            const data = await response.json();
+
+            if(response.ok) {
+                console.log(data.message);
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    });
+</script>

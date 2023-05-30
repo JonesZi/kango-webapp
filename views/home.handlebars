@@ -1,9 +1,56 @@
  {{> header}}
 
-<p> The status is {{update}}</p>
+<h3>Spielanleitung</h3>
+<p>Herzlich Willkommen zum interaktiven Audio Gästebuch für Kaya & Ingo!</p>
+<p>Die Regeln sind denkbar leicht: Wählt auf dem Bildschirm aus den verfügbaren Kategorien - Je nach Kategorie 
+   werdet ihr verschiedene Fragen erhalten, die ihr innerhalb von 30 Sekunden beantworten müsst. 
+   Insgesamt gibt könnt ihr drei Kategorien auswählen, dann ist das Spiel vorbei!
 
- {{#if update}}
-    {{> screenTwo}}
- {{else}}
-    {{> screenOne}}
- {{/if}}
+   Gebt jetzt eure Namen ein und klickt auf "Starten!"
+
+</p>
+
+<form id="myForm">
+  <label for="myInput">Name:</label>
+  <input type="text" id="myInput" name="name">
+  <button type="submit">Submit</button>
+</form>
+
+<div id="responseContainer"></div>
+
+
+<script>
+   const form = document.getElementById('myForm');
+   const responseContainer = document.getElementById('responseContainer');
+
+   form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const fromDataJson = Object.fromEntries(formData.entries());
+      const requestBody = JSON.stringify(fromDataJson);
+      
+      try {
+        const response = await fetch('/validate', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: requestBody
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Server response is OK
+          responseContainer.innerHTML = `<a href="${data.link}">Redirect to ${data.link}</a>`;
+        } else {
+          // Server response contains an error
+          responseContainer.innerHTML = `<div class="error">${data.message}</div>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+</script>
