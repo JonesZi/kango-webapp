@@ -1,0 +1,37 @@
+{{> header}}
+
+<h1>Das ist {{category.name}} mit der ID {{category.id}}</h1>
+<a href="/categories">Zurück zur Übersicht</a>
+
+<script>
+    
+   
+    window.addEventListener("load", () => {
+        const objectId = 1;
+        console.log(objectId);
+        const requestBody = JSON.stringify({id: objectId });
+        fetch("/removeCategory", {
+            method: "POST",
+            headers: {
+                "Contenct-Type": "application/json"
+            },
+            body: requestBody
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+        console.log(data.message); // Object popped successfully
+        console.log(data.poppedObject); // Display the popped object
+        // Perform any additional actions
+        } else {
+        console.error(data.message); // Object not found
+        // Handle the error or display an error message
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Handle the error or display an error message
+    });
+
+</script>

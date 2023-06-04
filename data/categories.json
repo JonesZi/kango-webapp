@@ -1,0 +1,15 @@
+[{
+    "id": 1,
+    "name": "Kategorie1",
+    "link": "/1"
+}, 
+{
+    "id": 2,
+    "name": "Kategorie2",
+    "link": "/2"
+},
+{
+    "id": 3,
+    "name": "Kategorie3",
+    "link": "/3"
+}]

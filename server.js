@@ -49,6 +49,42 @@ app.get("/admin", (req,res) => {
   res.render("admin");
 });
 
+app.get("/categories", (req,res) => {
+  fs.readFile("./data/categories.json", "utf-8", (err,data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error reading Json file"})
+    };
+    try {
+      const categories = JSON.parse(data);
+      res.render("categories", {"categories": categories});
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error"});
+    };
+  });
+});
+
+app.get("/:id", (req,res) => {
+  const pageID = parseInt(req.params.id);
+  const index = pageID - 1;
+  let data;
+  fs.readFile("./data/categories.json", "utf-8", (err,data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error reading Json file"})
+    };
+    try {
+      const categories = JSON.parse(data);
+      data = categories[index];
+      res.render("category", {"category": data});
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error"});
+    };
+  });  
+});
+
 //Handle Post Request
 //Handle uploads
 app.post("/upload", upload.any("file"), (req,res) => {
@@ -77,7 +113,7 @@ app.post("/validate", (req,res) => {
             return res.status(500),json({ message: "Server error writing to Json file"})
           }
 
-          return res.json({status: "ok", link: "/success"});
+          return res.json({status: "ok", link: "/categories"});
         });
       }
     } catch (error) {
@@ -89,8 +125,8 @@ app.post("/validate", (req,res) => {
 
 // Delete user list
 app.post("/deleteUsers", (req,res) => {
-  const empytNames = [];
-  fs.writeFile("./data/names.json", JSON.stringify(empytNames), (err) => {
+  const emptyNames = [];
+  fs.writeFile("./data/names.json", JSON.stringify(emptyNames), (err) => {
     if (err) {
       console.error(err);
       return res.status(500),json({ message: "Server error writing to Json file"})
@@ -99,6 +135,42 @@ app.post("/deleteUsers", (req,res) => {
     return res.json({status: "ok", message: "Userlist reset"});
     });
   });
+
+//Remove Category
+app.post("/removeCategory", (req,res) => {
+  const { objectId } = req.body;
+  console.log(req.body);
+  
+  fs.readFile("./data/categories.json", "utf8", (err,data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error reading Json file"});
+    }
+
+    try {
+      const categories = JSON.parse(data);
+      const objectIndex = categories.findIndex(obj => obj.id === objectId);
+      
+      if (objectIndex !== -1) {
+        // Remove the object from the array
+        const poppedObject = categories.splice(objectIndex, 1)[0];
+        //overwrite file
+        fs.writeFile("./data/categories.json", JSON.stringify(categories), (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500),json({ message: "Server error writing to Json file"})
+          }
+        });
+        res.json({ status: 'ok', message: 'Object popped successfully', poppedObject });
+      } else {
+        res.status(404).json({ status: 'error', message: 'Object not found' });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({message: "Server error"});
+    }
+  });
+})
 
 
 //Init server on PORT

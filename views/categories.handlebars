@@ -1,0 +1,11 @@
+{{> header}}
+
+<h1>Wählt eine der folgenden Kategorien:</h1>
+
+<div class="categories">
+    <ul>
+        {{#each categories}}
+            <li><a href={{this.link}}>{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+</div>
